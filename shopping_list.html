@@ -22,7 +22,7 @@
     const shoppingList = document.getElementById("shoppingList");
     const plan = JSON.parse(localStorage.getItem("mealPlan")) || {};
 
-    fetch("recipes.json")
+    fetch("SMP/data/recipes.json")
       .then(res => res.json())
       .then(recipes => {
         const ingredientsMap = {};

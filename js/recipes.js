@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const goal = localStorage.getItem("goal") || "gubitak"; // default ako nema
 
   function loadRecipes() {
-    fetch("recipes.json")
+    fetch("SMP/data/recipes.json")
       .then((response) => response.json())
       .then((recipes) => {
         const selectedCategory = categoryFilter.value;

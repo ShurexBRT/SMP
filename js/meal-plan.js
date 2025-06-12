@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const goalSelect = document.getElementById("goal-select");
   const planContainer = document.getElementById("meal-plan");
 
-  const recipesURL = "recipes.json";
+  const recipesURL = "SMP/data/recipes.json";
   let recipes = [];
   let goal = localStorage.getItem("goal") || "gubitak";
 
