@@ -43,4 +43,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   loadInventory();
+  
+  document.getElementById("clear-inventory").addEventListener("click", function () {
+  if (confirm("Da li si siguran da želiš da isprazniš frižider?")) {
+    localStorage.removeItem("inventory");
+    location.reload();
+  }
+});
+
 });

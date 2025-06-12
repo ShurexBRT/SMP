@@ -105,8 +105,10 @@ body.dark td {
   transition: transform 0.2s ease;
 }
 .card:hover {
-  transform: translateY(-4px);
+  transform: scale(1.01);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
+
 body.dark .card {
   background: #2a2a2a;
 }
