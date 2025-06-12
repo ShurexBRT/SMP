@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const shoppingListEl = document.getElementById("shopping-list");
-  const recipesURL = "data/recipes.json";
+  const recipesURL = "recipes.json";
 
   const mealPlan = JSON.parse(localStorage.getItem("mealPlan")) || {};
   let allIngredients = [];

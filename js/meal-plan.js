@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const goalSelect = document.getElementById("goal-select");
   const planContainer = document.getElementById("meal-plan");
 
-  const recipesURL = "data/recipes.json";
+  const recipesURL = "recipes.json";
   let recipes = [];
   let goal = localStorage.getItem("goal") || "gubitak";
 

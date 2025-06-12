@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const goal = localStorage.getItem("goal") || "gubitak"; // default ako nema
 
   function loadRecipes() {
-    fetch("data/recipes.json")
+    fetch("recipes.json")
       .then((response) => response.json())
       .then((recipes) => {
         const selectedCategory = categoryFilter.value;
