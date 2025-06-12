@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recepti</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/recipes.js" defer></script>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+</head>
+<body>
+    <header>
+        <h1>📖 Recepti</h1>
+        <a href="index.html" class="btn-cta">⬅️ Nazad</a>
+    </header>
+
+    <main>
+        <label for="goalFilter">🎯 Filtriraj po cilju:</label>
+        <select id="goalFilter">
+            <option value="">Svi</option>
+            <option value="gubitak">Gubitak kila</option>
+            <option value="odrzavanje">Održavanje</option>
+        </select>
+
+        <section id="recipes-list"></section>
+    </main>
+
+    <script>
+        let recipes = [];
+        const goal = localStorage.getItem("goal") || "";
+
+        fetch("data/recipes.json")
+            .then(res => res.json())
+            .then(data => {
+                recipes = data;
+                document.getElementById("goalFilter").value = goal;
+                renderRecipes();
+            });
+
+        document.getElementById("goalFilter").addEventListener("change", (e) => {
+            localStorage.setItem("goal", e.target.value);
+            renderRecipes();
+        });
+
+        function renderRecipes() {
+            const list = document.getElementById("recipes-list");
+            const selectedGoal = document.getElementById("goalFilter").value;
+            list.innerHTML = "";
+            const filtered = recipes.filter(r => !selectedGoal || r.goal === selectedGoal);
+
+            if (filtered.length === 0) {
+                list.innerHTML = "<p>Nema recepata za izabrani cilj.</p>";
+                return;
+            }
+
+            filtered.forEach(recipe => {
+                const card = document.createElement("div");
+                card.className = "recipe-card";
+
+                card.innerHTML = `
+                    <h2>${recipe.name}</h2>
+                    <p><strong>Kategorija:</strong> ${recipe.category || "Nepoznato"}</p>
+                    <ul>
+                        ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join("")}
+                    </ul>
+                    ${recipe.nutrition ? `
+                    <p><strong>Nutritivne vrednosti:</strong></p>
+                    <ul>
+                        <li>Kalorije: ${recipe.nutrition.calories} kcal</li>
+                        <li>Proteini: ${recipe.nutrition.protein} g</li>
+                        <li>Ugljeni hidrati: ${recipe.nutrition.carbs} g</li>
+                        <li>Masti: ${recipe.nutrition.fat} g</li>
+                    </ul>` : "<p><em>Nema nutritivnih podataka.</em></p>"}
+                `;
+
+                list.appendChild(card);
+            });
+        }
+    </script>
+</body>
+<footer>
+  <p>Peki & Saki • Smart Meal Planner</p>
+</footer>
+
+</html>

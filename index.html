@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Smart Meal Planner by Peki & Saki">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <title>Smart Meal Planner</title>
+</head>
+<body>
+    <header>
+        <h1>Smart Meal Planner</h1>
+        <button id="theme-toggle">🌗 Tema</button>
+    </header>
+
+    <main>
+        <section class="nav-grid">
+            <a href="recipes.html" class="btn-cta">📖 Recepti</a>
+            <a href="inventory.html" class="btn-cta">🧊 Frižider</a>
+            <a href="meal-plan.html" class="btn-cta">📅 Nedeljni Plan</a>
+            <a href="shopping-list.html" class="btn-cta">🛒 Lista za Kupovinu</a>
+            <a href="add-recipe.html" class="btn-cta">➕ Dodaj Recept</a>
+            <a href="about.html" class="btn-cta">ℹ️ O aplikaciji</a>
+        </section>
+    </main>
+
+    <footer>
+        <p><strong>Peki & Saki • Smart Meal Planner</strong></p>
+    </footer>
+
+    <script>
+        // Tema toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Učitaj temu iz localStorage
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark');
+            }
+        });
+    </script>
+</body>
+<footer>
+  <p>Peki & Saki • Smart Meal Planner</p>
+</footer>
+
+</html>

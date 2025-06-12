@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dodaj recept</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/add-recipe.js" defer></script>
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+</head>
+<body>
+  <header>
+    <h1>➕ Dodaj recept</h1>
+    <a href="index.html" class="btn-cta">⬅️ Nazad</a>
+  </header>
+
+  <main>
+    <form id="recipeForm">
+      <input type="text" id="name" placeholder="Naziv jela" required />
+      <select id="category" required>
+        <option value="">-- Kategorija --</option>
+        <option value="doručak">Doručak</option>
+        <option value="ručak">Ručak</option>
+        <option value="večera">Večera</option>
+      </select>
+      <select id="goal" required>
+        <option value="">-- Cilj --</option>
+        <option value="gubitak">Gubitak kila</option>
+        <option value="odrzavanje">Održavanje</option>
+      </select>
+      <textarea id="description" placeholder="Opis..." required></textarea>
+
+      <div id="ingredients">
+        <label>Sastojci:</label>
+        <input type="text" class="ingredient" placeholder="Sastojak 1" required />
+      </div>
+      <button type="button" onclick="addIngredient()">➕ Dodaj još</button>
+
+      <h4>Nutritivne vrednosti</h4>
+      <input type="number" id="calories" placeholder="Kalorije" required />
+      <input type="number" id="protein" placeholder="Proteini (g)" required />
+      <input type="number" id="carbs" placeholder="UH (g)" required />
+      <input type="number" id="fat" placeholder="Masti (g)" required />
+
+      <button type="submit">💾 Sačuvaj recept</button>
+    </form>
+  </main>
+
+  <script>
+    function addIngredient() {
+      const div = document.createElement("div");
+      div.innerHTML = '<input type="text" class="ingredient" placeholder="Sastojak" required />';
+      document.getElementById("ingredients").appendChild(div);
+    }
+
+    document.getElementById("recipeForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const category = document.getElementById("category").value.trim();
+      const goal = document.getElementById("goal").value.trim();
+      const description = document.getElementById("description").value.trim();
+      const calories = Number(document.getElementById("calories").value);
+      const protein = Number(document.getElementById("protein").value);
+      const carbs = Number(document.getElementById("carbs").value);
+      const fat = Number(document.getElementById("fat").value);
+
+      const ingredients = Array.from(document.querySelectorAll(".ingredient"))
+        .map(el => el.value.trim())
+        .filter(val => val);
+
+      const recipe = {
+        name,
+        category,
+        goal,
+        description,
+        ingredients,
+        nutrition: { calories, protein, carbs, fat }
+      };
+
+      const saved = JSON.parse(localStorage.getItem("customRecipes")) || [];
+      saved.push(recipe);
+      localStorage.setItem("customRecipes", JSON.stringify(saved));
+      alert("Recept sačuvan!");
+      this.reset();
+      document.querySelectorAll(".ingredient").forEach((el, i) => {
+        if (i > 0) el.parentElement.remove();
+      });
+    });
+  </script>
+</body>
+<footer>
+  <p>Peki & Saki • Smart Meal Planner</p>
+</footer>
+
+</html>

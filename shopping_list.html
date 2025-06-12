@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista za Kupovinu</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/shopping.js" defer></script>
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+</head>
+<body>
+  <header>
+    <h1>🛒 Lista za Kupovinu</h1>
+    <a href="index.html" class="btn-cta">⬅️ Nazad</a>
+  </header>
+
+  <main>
+    <ul id="shoppingList"></ul>
+  </main>
+
+  <script>
+    const shoppingList = document.getElementById("shoppingList");
+    const plan = JSON.parse(localStorage.getItem("mealPlan")) || {};
+
+    fetch("data/recipes.json")
+      .then(res => res.json())
+      .then(recipes => {
+        const ingredientsMap = {};
+
+        Object.values(plan).forEach(recipeName => {
+          const recipe = recipes.find(r => r.name === recipeName);
+          if (recipe) {
+            recipe.ingredients.forEach(ing => {
+              if (ingredientsMap[ing]) {
+                ingredientsMap[ing]++;
+              } else {
+                ingredientsMap[ing] = 1;
+              }
+            });
+          }
+        });
+
+        const ingredients = Object.entries(ingredientsMap);
+        if (ingredients.length === 0) {
+          shoppingList.innerHTML = "<p>Nema planiranih recepata.</p>";
+        } else {
+          ingredients.forEach(([item, count]) => {
+            const li = document.createElement("li");
+            li.textContent = `${item} ${count > 1 ? `(${count}x)` : ""}`;
+            shoppingList.appendChild(li);
+          });
+        }
+      });
+  </script>
+</body>
+<footer>
+  <p>Peki & Saki • Smart Meal Planner</p>
+</footer>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frižider</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/inventory.js" defer></script>
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+</head>
+<body>
+  <header>
+    <h1>🧊 Frižider</h1>
+    <a href="index.html" class="btn-cta">⬅️ Nazad</a>
+  </header>
+
+  <main>
+    <form id="addItemForm">
+      <input type="text" id="itemInput" placeholder="Dodaj namirnicu" required>
+      <button type="submit">➕ Dodaj</button>
+    </form>
+
+    <ul id="inventoryList"></ul>
+  </main>
+
+  <script>
+    const inventoryList = document.getElementById('inventoryList');
+    const addItemForm = document.getElementById('addItemForm');
+    const itemInput = document.getElementById('itemInput');
+
+    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+    renderList();
+
+    addItemForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newItem = itemInput.value.trim();
+      if (newItem && !inventory.includes(newItem)) {
+        inventory.push(newItem);
+        localStorage.setItem('inventory', JSON.stringify(inventory));
+        renderList();
+        itemInput.value = '';
+      }
+    });
+
+    function renderList() {
+      inventoryList.innerHTML = '';
+      inventory.forEach((item, i) => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        const delBtn = document.createElement('button');
+        delBtn.textContent = '❌';
+        delBtn.style.marginLeft = '10px';
+        delBtn.onclick = () => {
+          inventory.splice(i, 1);
+          localStorage.setItem('inventory', JSON.stringify(inventory));
+          renderList();
+        };
+        li.appendChild(delBtn);
+        inventoryList.appendChild(li);
+      });
+    }
+  </script>
+</body>
+<footer>
+  <p>Peki & Saki • Smart Meal Planner</p>
+</footer>
+
+</html>

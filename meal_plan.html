@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nedeljni Plan Obroka</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/meal-plan.js" defer></script>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+</head>
+<body>
+    <header>
+        <h1>📅 Nedeljni Plan Obroka</h1>
+        <a href="index.html" class="btn-cta">⬅️ Nazad</a>
+    </header>
+
+    <main>
+        <label for="goalSelect">🎯 Tvoj cilj:</label>
+        <select id="goalSelect">
+            <option value="">-- Izaberi cilj --</option>
+            <option value="gubitak">Gubitak kila</option>
+            <option value="odrzavanje">Održavanje</option>
+        </select>
+
+        <form id="meal-plan-form">
+            <section id="days-container"></section>
+            <button type="submit">💾 Sačuvaj Plan</button>
+        </form>
+
+        <button id="generate-shopping">🛒 Generiši Listu za Kupovinu</button>
+    </main>
+
+    <script>
+        const days = ["Ponedeljak", "Utorak", "Sreda", "Četvrtak", "Petak", "Subota", "Nedelja"];
+        const meals = ["Doručak", "Ručak", "Večera"];
+        let recipes = [];
+        let selectedGoal = localStorage.getItem("goal") || "";
+
+        document.getElementById("goalSelect").value = selectedGoal;
+        document.getElementById("goalSelect").addEventListener("change", e => {
+            selectedGoal = e.target.value;
+            localStorage.setItem("goal", selectedGoal);
+            renderForm();
+            loadSavedPlan();
+        });
+
+        fetch("data/recipes.json")
+            .then(res => res.json())
+            .then(data => {
+                recipes = data;
+                renderForm();
+                loadSavedPlan();
+            });
+
+        function renderForm() {
+            const container = document.getElementById("days-container");
+            container.innerHTML = "";
+
+            days.forEach(day => {
+                const section = document.createElement("section");
+                section.innerHTML = `<h2>${day}</h2>`;
+
+                meals.forEach(meal => {
+                    const label = document.createElement("label");
+                    label.textContent = `${meal}: `;
+
+                    const select = document.createElement("select");
+                    select.name = `${day}-${meal}`;
+                    select.innerHTML = `<option value="">-- Izaberi --</option>` +
+                        recipes
+                            .filter(r => r.category?.toLowerCase() === meal.toLowerCase() && (!selectedGoal || r.goal === selectedGoal))
+                            .map(r => `<option value="${r.name}">${r.name}</option>`)
+                            .join("");
+
+                    section.appendChild(label);
+                    section.appendChild(select);
+                    section.appendChild(document.createElement("br"));
+                });
+
+                container.appendChild(section);
+            });
+        }
+
+        function loadSavedPlan() {
+            const saved = JSON.parse(localStorage.getItem("mealPlan")) || {};
+            Object.entries(saved).forEach(([key, val]) => {
+                const select = document.querySelector(`[name='${key}']`);
+                if (select) select.value = val;
+            });
+        }
+
+        document.getElementById("meal-plan-form").addEventListener("submit", e => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const plan = {};
+            for (const [key, val] of formData.entries()) {
+                plan[key] = val;
+            }
+            localStorage.setItem("mealPlan", JSON.stringify(plan));
+            alert("Plan sačuvan!");
+        });
+
+        document.getElementById("generate-shopping").addEventListener("click", () => {
+            alert("Lista za kupovinu biće generisana na stranici 'Lista za kupovinu'.");
+            location.href = "shopping-list.html";
+        });
+    </script>
+</body>
+<footer>
+  <p>Peki & Saki • Smart Meal Planner</p>
+</footer>
+
+</html>
